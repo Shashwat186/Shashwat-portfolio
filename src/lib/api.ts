@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8080";
+const BASE_URL = "http://localhost:8081";
 
 export async function fetchBlogs(page = 0) {
   const res = await fetch(`${BASE_URL}/api/blogs?page=${page}`, {
@@ -19,6 +19,18 @@ export async function fetchBlogBySlug(slug: string) {
 
   if (!res.ok) {
     throw new Error("Blog not found");
+  }
+
+  return res.json();
+}
+
+export async function fetchResume() {
+  const res = await fetch(`${BASE_URL}/api/resume`, {
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch resume");
   }
 
   return res.json();
