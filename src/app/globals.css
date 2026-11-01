@@ -2,10 +2,14 @@
    directives were leaving every utility class in the page uncompiled. */
 @import "tailwindcss";
 
+/* Wide but short desktop viewports (e.g. a 1080p laptop at 125% scaling) get tighter spacing so each section fits on screen. */
+@custom-variant short (@media (min-width: 1280px) and (max-height: 820px));
+
 :root { color-scheme: dark; }
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 6rem; }
-body { margin: 0; min-width: 320px; background: #06101f; color: #f8fafc; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+/* No scroll-padding: each section's own top padding already clears the fixed header. */
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; background: #06101f; color: #f8fafc; font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
 a { color: inherit; text-decoration: none; }
 ::selection { background: #67e8f9; color: #082f49; }
 
@@ -37,8 +41,50 @@ a { color: inherit; text-decoration: none; }
 .button-primary { color: #071525; background: linear-gradient(100deg, #a5f3fc, #c4b5fd); box-shadow: 0 8px 30px rgba(103,232,249,.19); }.button-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 35px rgba(103,232,249,.3); }
 .button-secondary { color: #e2e8f0; border: 1px solid rgba(255,255,255,.15); background: rgba(255,255,255,.05); }.button-secondary:hover { background: rgba(255,255,255,.12); }
 .nav-link { transition: color .2s ease; }.nav-link:hover { color: #a5f3fc; }
+/* Once scrolled, a band behind the floating nav fades content out so text never shows around or through it. */
+.site-header::before { content: ""; position: absolute; inset: 0 0 -1.75rem; z-index: -1; pointer-events: none; background: linear-gradient(to bottom, #060d1a 0%, #060d1a 74%, rgba(6,13,26,0) 100%); opacity: 0; transition: opacity .3s ease; }
+.site-header.is-scrolled::before { opacity: 1; }
+.social-link { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 9999px; border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.06); color: #cbd5e1; transition: color .2s ease, background .2s ease, border-color .2s ease, transform .2s ease; }
+.social-link:hover, .social-link:focus-visible { color: #a5f3fc; background: rgba(255,255,255,.12); border-color: rgba(165,243,252,.3); transform: translateY(-1px); }
+/* Left section rail: dots joined by a track whose cyan fill grows (via scaleY) up to the active section. */
+.side-nav { position: fixed; z-index: 10; left: 1.5rem; top: 50%; transform: translateY(-50%); }
+.side-nav-track { position: absolute; left: calc(.3125rem - .5px); top: .625rem; bottom: .625rem; width: 1px; background: rgba(148,163,184,.22); }
+.side-nav-fill { position: absolute; inset: 0; background: linear-gradient(#67e8f9, #a78bfa); transform-origin: top; transition: transform .6s cubic-bezier(.22, 1, .36, 1); }
+.side-nav-link { display: flex; align-items: center; gap: .9rem; height: 1.25rem; outline: none; }
+.side-nav-dot { position: relative; width: .625rem; height: .625rem; flex-shrink: 0; border-radius: 9999px; border: 1px solid rgba(148,163,184,.55); background: #091426; transition: transform .35s cubic-bezier(.22, 1, .36, 1), background .3s ease, border-color .3s ease, box-shadow .3s ease; }
+.side-nav-link.is-passed .side-nav-dot { border-color: #67e8f9; background: #67e8f9; }
+.side-nav-link.is-active .side-nav-dot { border-color: #a5f3fc; background: #a5f3fc; transform: scale(1.35); box-shadow: 0 0 0 .3rem rgba(103,232,249,.12), 0 0 14px rgba(103,232,249,.7); }
+.side-nav-link:hover .side-nav-dot, .side-nav-link:focus-visible .side-nav-dot { border-color: #a5f3fc; transform: scale(1.25); }
+/* "Back to top" arrow: a larger circle centred on the same axis as the dots, keeping labels aligned. */
+.side-nav-arrow { display: grid; place-items: center; width: 1.4rem; height: 1.4rem; margin: 0 -.3875rem; flex-shrink: 0; border-radius: 9999px; border: 1px solid rgba(148,163,184,.45); background: #091426; color: #94a3b8; transition: color .25s ease, border-color .25s ease, background .25s ease, transform .3s cubic-bezier(.22, 1, .36, 1), box-shadow .3s ease; }
+.side-nav-arrow svg { width: .8rem; height: .8rem; }
+.side-nav-link.is-active .side-nav-arrow { border-color: #a5f3fc; background: #a5f3fc; color: #071525; box-shadow: 0 0 0 .3rem rgba(103,232,249,.12), 0 0 14px rgba(103,232,249,.6); }
+.side-nav-link:hover .side-nav-arrow, .side-nav-link:focus-visible .side-nav-arrow { border-color: #a5f3fc; color: #a5f3fc; transform: translateY(-2px); }
+.side-nav-link.is-active:hover .side-nav-arrow { color: #071525; }
+.side-nav-label { white-space: nowrap; border-radius: 9999px; border: 1px solid rgba(255,255,255,.1); background: rgba(6,13,26,.85); padding: .2rem .65rem; font-size: .72rem; font-weight: 500; color: #e2e8f0; opacity: 0; transform: translateX(-6px); pointer-events: none; transition: opacity .25s ease, transform .3s cubic-bezier(.22, 1, .36, 1); }
+.side-nav-link:hover .side-nav-label, .side-nav-link:focus-visible .side-nav-label { opacity: 1; transform: none; }
+/* Wide screens have room beside the content, so the active section's name stays visible. */
+@media (min-width: 1536px) { .side-nav { left: 2rem; } .side-nav-link.is-active .side-nav-label { opacity: 1; transform: none; border-color: transparent; background: transparent; color: #a5f3fc; } }
+/* Sits just under the fixed header (z-20) so the nav pill and its close button stay on top. */
+.mobile-menu { position: fixed; inset: 0; z-index: 15; background: radial-gradient(circle at 80% 0%, rgba(49,46,129,.55), transparent 55%), #060d1a; opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility 0s linear .3s; }
+.mobile-menu--open { opacity: 1; visibility: visible; transition: opacity .3s ease, visibility 0s; }
+.mobile-menu-item { opacity: 0; transform: translateY(12px); transition: opacity .35s ease, transform .45s cubic-bezier(.22, 1, .36, 1); }
+.mobile-menu--open .mobile-menu-item { opacity: 1; transform: none; }
+.hamburger { position: relative; display: block; width: 1rem; height: .7rem; }
+.hamburger span { position: absolute; left: 0; width: 100%; height: 1.5px; border-radius: 1px; background: #e0f2fe; transition: transform .3s cubic-bezier(.22, 1, .36, 1), top .3s cubic-bezier(.22, 1, .36, 1); }
+.hamburger span:first-child { top: 0; }.hamburger span:last-child { top: calc(100% - 1.5px); }
+.hamburger--open span:first-child { top: calc(50% - .75px); transform: rotate(45deg); }.hamburger--open span:last-child { top: calc(50% - .75px); transform: rotate(-45deg); }
 .skill-pill { border-radius: 9999px; border: 1px solid rgba(255,255,255,.11); background: rgba(15,23,42,.4); padding: .42rem .7rem; font-size: .75rem; color: #cbd5e1; }
 .project-card { min-height: 20rem; }
+.skill-icon { display: grid; place-items: center; width: 2.6rem; height: 2.6rem; flex-shrink: 0; border-radius: .85rem; border: 1px solid rgba(165,243,252,.2); background: linear-gradient(135deg, rgba(103,232,249,.18), rgba(167,139,250,.18)); color: #a5f3fc; box-shadow: inset 0 1px 0 rgba(255,255,255,.12); transition: transform .3s cubic-bezier(.22, 1, .36, 1), box-shadow .3s ease; }
+.skill-card:hover .skill-icon { transform: scale(1.06) rotate(-4deg); box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 0 22px rgba(103,232,249,.25); }
+.skill-card .skill-pill { display: inline-flex; align-items: center; gap: .4rem; }
+.skill-logo { width: .85rem; height: .85rem; flex-shrink: 0; color: #94a3b8; transition: color .2s ease; }
+.skill-card .skill-pill:hover .skill-logo { color: var(--brand, #a5f3fc); }
+.skill-card .skill-pill { transition: border-color .2s ease, color .2s ease, background .2s ease; }
+.skill-card:hover .skill-pill { border-color: rgba(165,243,252,.2); color: #e2e8f0; }
+.skill-card .skill-pill:hover { background: rgba(103,232,249,.12); color: #ecfeff; }
+.skill-card--wide { border-color: rgba(165,243,252,.18); background: linear-gradient(110deg, rgba(14,116,144,.24), rgba(76,29,149,.2)); }
 /* Only transform and opacity animate here: height, box-shadow and backdrop blur re-layout or repaint every frame and made the hover lag. */
 .experience-card { --ease-card: cubic-bezier(.22, 1, .36, 1); isolation: isolate; min-height: 10.5rem; overflow: hidden; backdrop-filter: none; -webkit-backdrop-filter: none; transition: transform .35s var(--ease-card), border-color .35s ease; }
 /* Gradients can't be interpolated, so each company's hover colour lives on a layer that fades in. */
@@ -46,19 +92,32 @@ a { color: inherit; text-decoration: none; }
 .experience-card:hover::before { opacity: 1; }
 .experience-content { position: relative; z-index: 2; }
 .experience-content h3, .experience-content p, .experience-content li, .experience-content span { transition: color .35s ease, background-color .35s ease; }
-.company-watermark { position: absolute; z-index: 1; right: 2.5rem; top: 50%; display: flex; align-items: center; gap: .3rem; transform: translateY(-50%) scale(.76); transform-origin: right center; opacity: 0; pointer-events: none; white-space: nowrap; transition: opacity .35s ease, transform .45s var(--ease-card); }
+/* The company logo fills the card behind the text, centred, and fades in on hover. */
+.company-watermark { position: absolute; z-index: 1; inset: 1.25rem; display: flex; align-items: center; justify-content: center; transform: scale(.94); opacity: 0; pointer-events: none; white-space: nowrap; transition: opacity .35s ease, transform .45s var(--ease-card); }
 .company-watermark span { font-size: clamp(3rem, 9vw, 8rem); font-weight: 900; letter-spacing: -.1em; line-height: .8; }
-.company-logo { width: min(34rem, 46vw); height: auto; max-height: 9rem; object-fit: contain; object-position: right center; }
+.company-logo { width: 100%; height: 100%; object-fit: contain; object-position: center; }
+/* The Genpact file has wide empty margins around the mark, so enlarge it to match the others. */
+.experience-card--genpact .company-logo { transform: scale(1.35); }
 .experience-card:hover { z-index: 4; transform: translateY(-4px); }
-.experience-card:hover .company-watermark { opacity: .13; transform: translateY(-50%) scale(1); }
+.experience-tab { display: inline-flex; align-items: baseline; gap: .6rem; border-radius: 9999px; border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.04); padding: .55rem 1.1rem; font-size: .9rem; font-weight: 500; color: #cbd5e1; transition: color .2s ease, background .2s ease, border-color .2s ease; }
+.experience-tab:hover { color: #fff; background: rgba(255,255,255,.09); }
+.experience-tab.is-active { color: #071525; border-color: transparent; background: linear-gradient(100deg, #a5f3fc, #c4b5fd); }
+.experience-tab-period { font-size: .7rem; font-weight: 400; opacity: .7; }
+@media (max-width: 639px) { .experience-tab-period { display: none; } }
+.experience-panel { animation: panel-in .4s cubic-bezier(.22, 1, .36, 1); }
+@keyframes panel-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.experience-card:hover .company-watermark { opacity: .11; transform: scale(1); }
 .experience-card--genpact::before { background: linear-gradient(125deg, rgba(248,250,252,.96), rgba(203,213,225,.9)); }
 .experience-card--genpact:hover { border-color: rgba(0,0,0,.2); }
 .experience-card--genpact .company-watermark { color: #020617; }.experience-card--genpact:hover h3, .experience-card--genpact:hover li { color: #0f172a; }.experience-card--genpact:hover p { color: #334155; }.experience-card--genpact:hover .text-cyan-100\/80 { color: #0e7490; }.experience-card--genpact:hover .bg-cyan-300 { background-color: #0f172a; }
 .experience-card--blockstash::before { background: linear-gradient(125deg, rgba(4,78,60,.96), rgba(6,95,70,.88)); }
 .experience-card--blockstash:hover { border-color: rgba(74,222,128,.52); }
-.experience-card--blockstash .company-watermark { color: #4ade80; }.experience-card--blockstash:hover .company-watermark { opacity: .22; }
+.experience-card--blockstash .company-watermark { color: #4ade80; }.experience-card--blockstash:hover .company-watermark { opacity: .16; }
 .contact-panel { position: relative; border: 1px solid rgba(165,243,252,.2); background: linear-gradient(115deg, rgba(14,116,144,.32), rgba(76,29,149,.26)); box-shadow: inset 0 1px 0 rgba(255,255,255,.16), 0 25px 70px rgba(0,0,0,.18); }
-@media (max-width: 640px) { .experience-card:hover { transform: none; }.company-watermark { right: 1rem; }.company-watermark span { font-size: 3.7rem; } }
+@media (max-width: 640px) { .experience-card:hover { transform: none; }.company-watermark span { font-size: 3.7rem; } }
 @media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; }.hero-card, .hero-portrait { max-width: 34rem; }.aurora-one { left: -28rem; } }
-@media (prefers-reduced-motion: reduce) { .experience-card, .experience-card::before, .company-watermark { transition-duration: .01ms; } }
+@media (prefers-reduced-motion: reduce) { .experience-panel { animation: none; } .experience-card, .experience-card::before, .company-watermark { transition-duration: .01ms; } }
 @media (max-width: 640px) { .glass-card { border-radius: 1.25rem; }.hero-card { padding: 1.5rem; }.hero-portrait, .hero-portrait-image { min-height: 24rem; } }
+@media (min-width: 1280px) and (max-height: 820px) { .project-card { min-height: 0; } .skill-icon { width: 2.2rem; height: 2.2rem; border-radius: .75rem; } }
+.show-more { align-items: center; gap: .4rem; border-radius: 9999px; border: 1px solid rgba(165,243,252,.25); background: rgba(103,232,249,.08); padding: .4rem .9rem; font-size: .8rem; font-weight: 500; color: #a5f3fc; transition: background .2s ease, border-color .2s ease; }
+.show-more:hover { background: rgba(103,232,249,.16); border-color: rgba(165,243,252,.45); }

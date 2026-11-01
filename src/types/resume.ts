@@ -11,6 +11,7 @@ export interface Resume {
 export interface Contact {
   email: string;
   linkedin: string;
+  github: string;
   mobile: string;
 }
 

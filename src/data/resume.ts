@@ -5,6 +5,7 @@ export const resume: Resume = {
   contact: {
     email: "shashwatcha10@gmail.com",
     linkedin: "https://www.linkedin.com/in/shashwatschauhan/",
+    github: "https://github.com/Shashwat186",
     mobile: "+91-9982602200",
   },
   summary: "Full-stack engineer specializing in enterprise backend systems, cloud integrations, and developer tooling.",
@@ -33,8 +34,6 @@ export const resume: Resume = {
         "Moved repositories from GitLab to GitHub, rebuilding GitLab pipelines as organization-standard GitHub Actions CI/CD workflows and moving CI secrets to HashiCorp Vault.",
         "Work on application security across Okta-based authentication with Okta user groups for role-based access, and remediated security findings reported by ArmorCode across enterprise applications.",
         "Implemented database schema and data migrations using Flyway, ensuring version-controlled deployments across multiple environments.",
-        "Designed and maintained in-memory caching solutions and developed checklist/health-check APIs used by load balancer and proxy health checks to keep traffic on healthy instances, improving performance, cache validation, and operational monitoring.",
-        "Integrated enterprise applications with internal financial platforms to support end-to-end order lifecycle management and status tracking.",
       ],
     },
     {
