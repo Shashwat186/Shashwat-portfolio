@@ -39,18 +39,26 @@ a { color: inherit; text-decoration: none; }
 .nav-link { transition: color .2s ease; }.nav-link:hover { color: #a5f3fc; }
 .skill-pill { border-radius: 9999px; border: 1px solid rgba(255,255,255,.11); background: rgba(15,23,42,.4); padding: .42rem .7rem; font-size: .75rem; color: #cbd5e1; }
 .project-card { min-height: 20rem; }
-.experience-card { isolation: isolate; min-height: 10.5rem; overflow: hidden; transform-origin: center; transition: min-height .12s ease-out, transform .2s ease-out, background .2s ease-out, box-shadow .12s ease-out; }
-.experience-content { position: relative; z-index: 2; transition: color .35s ease; }
-.company-watermark { position: absolute; z-index: 1; right: 2.5rem; top: 50%; display: flex; align-items: center; gap: .3rem; transform: translateY(-50%) scale(.76); transform-origin: right center; opacity: 0; pointer-events: none; white-space: nowrap; transition: opacity .1s ease-out, transform .12s ease-out; }
+/* Only transform and opacity animate here: height, box-shadow and backdrop blur re-layout or repaint every frame and made the hover lag. */
+.experience-card { --ease-card: cubic-bezier(.22, 1, .36, 1); isolation: isolate; min-height: 10.5rem; overflow: hidden; backdrop-filter: none; -webkit-backdrop-filter: none; transition: transform .35s var(--ease-card), border-color .35s ease; }
+/* Gradients can't be interpolated, so each company's hover colour lives on a layer that fades in. */
+.experience-card::before { content: ""; position: absolute; inset: 0; z-index: 0; border-radius: inherit; opacity: 0; pointer-events: none; transition: opacity .35s ease; }
+.experience-card:hover::before { opacity: 1; }
+.experience-content { position: relative; z-index: 2; }
+.experience-content h3, .experience-content p, .experience-content li, .experience-content span { transition: color .35s ease, background-color .35s ease; }
+.company-watermark { position: absolute; z-index: 1; right: 2.5rem; top: 50%; display: flex; align-items: center; gap: .3rem; transform: translateY(-50%) scale(.76); transform-origin: right center; opacity: 0; pointer-events: none; white-space: nowrap; transition: opacity .35s ease, transform .45s var(--ease-card); }
 .company-watermark span { font-size: clamp(3rem, 9vw, 8rem); font-weight: 900; letter-spacing: -.1em; line-height: .8; }
 .company-logo { width: min(34rem, 46vw); height: auto; max-height: 9rem; object-fit: contain; object-position: right center; }
-.experience-card:hover { z-index: 4; min-height: 19rem; transform: scale(1.018); box-shadow: inset 0 1px 0 rgba(255,255,255,.24), 0 30px 70px rgba(0,0,0,.34); }
+.experience-card:hover { z-index: 4; transform: translateY(-4px); }
 .experience-card:hover .company-watermark { opacity: .13; transform: translateY(-50%) scale(1); }
-.experience-card--genpact:hover { border-color: rgba(0,0,0,.2); background: linear-gradient(125deg, rgba(248,250,252,.96), rgba(203,213,225,.9)); }
+.experience-card--genpact::before { background: linear-gradient(125deg, rgba(248,250,252,.96), rgba(203,213,225,.9)); }
+.experience-card--genpact:hover { border-color: rgba(0,0,0,.2); }
 .experience-card--genpact .company-watermark { color: #020617; }.experience-card--genpact:hover h3, .experience-card--genpact:hover li { color: #0f172a; }.experience-card--genpact:hover p { color: #334155; }.experience-card--genpact:hover .text-cyan-100\/80 { color: #0e7490; }.experience-card--genpact:hover .bg-cyan-300 { background-color: #0f172a; }
-.experience-card--blockstash:hover { border-color: rgba(74,222,128,.52); background: linear-gradient(125deg, rgba(4,78,60,.96), rgba(6,95,70,.88)); }
+.experience-card--blockstash::before { background: linear-gradient(125deg, rgba(4,78,60,.96), rgba(6,95,70,.88)); }
+.experience-card--blockstash:hover { border-color: rgba(74,222,128,.52); }
 .experience-card--blockstash .company-watermark { color: #4ade80; }.experience-card--blockstash:hover .company-watermark { opacity: .22; }
-.blog-card:hover span { letter-spacing: .02em; }.contact-panel { position: relative; border: 1px solid rgba(165,243,252,.2); background: linear-gradient(115deg, rgba(14,116,144,.32), rgba(76,29,149,.26)); box-shadow: inset 0 1px 0 rgba(255,255,255,.16), 0 25px 70px rgba(0,0,0,.18); }
-@media (max-width: 640px) { .experience-card:hover { min-height: 23rem; transform: none; }.company-watermark { right: 1rem; }.company-watermark span { font-size: 3.7rem; } }
+.contact-panel { position: relative; border: 1px solid rgba(165,243,252,.2); background: linear-gradient(115deg, rgba(14,116,144,.32), rgba(76,29,149,.26)); box-shadow: inset 0 1px 0 rgba(255,255,255,.16), 0 25px 70px rgba(0,0,0,.18); }
+@media (max-width: 640px) { .experience-card:hover { transform: none; }.company-watermark { right: 1rem; }.company-watermark span { font-size: 3.7rem; } }
 @media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; }.hero-card, .hero-portrait { max-width: 34rem; }.aurora-one { left: -28rem; } }
+@media (prefers-reduced-motion: reduce) { .experience-card, .experience-card::before, .company-watermark { transition-duration: .01ms; } }
 @media (max-width: 640px) { .glass-card { border-radius: 1.25rem; }.hero-card { padding: 1.5rem; }.hero-portrait, .hero-portrait-image { min-height: 24rem; } }

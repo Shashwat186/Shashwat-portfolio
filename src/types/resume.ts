@@ -1,4 +1,4 @@
-export interface ResumeResponse {
+export interface Resume {
   name: string;
   contact: Contact;
   summary: string;

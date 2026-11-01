@@ -1,22 +1,25 @@
-import Link from "next/link";
 import Image from "next/image";
-import { fetchBlogs, fetchResume } from "@/lib/api";
-import { Blog, ApiResponse } from "@/types/blogs";
-import { ResumeResponse } from "@/types/resume";
+import { resume } from "@/data/resume";
+import { Resume } from "@/types/resume";
 import Typewriter from "./Typewriter";
 
-const categoryLabels: Record<keyof ResumeResponse["skills"], string> = {
+const categoryLabels: Record<keyof Resume["skills"], string> = {
   languages: "Languages", backend: "Backend", databases: "Databases", frontend: "Frontend",
   devopsTools: "DevOps & Tools", cloudStorage: "Cloud & Storage", domain: "Domain Expertise",
 };
 
-const navItems = ["About", "Skills", "Work", "Projects", "Blogs"];
+const navItems = ["About", "Skills", "Work", "Projects"];
 
-export default async function Home() {
-  const [resumeResponse, blogResponse]: [ApiResponse<ResumeResponse>, ApiResponse<{ content: Blog[] }>] = await Promise.all([fetchResume(), fetchBlogs()]);
-  const resume = resumeResponse.data;
-  const blogs = blogResponse.data.content;
+const migrations = [
+  "Java 8 → Java 21 upgrades across multiple projects",
+  "GitLab → GitHub: moved repositories and rebuilt GitLab pipelines as organization-standard GitHub Actions workflows",
+  "GitLab CI secrets → HashiCorp Vault",
+  "Popcorn starter parent → open-spring starter parent",
+  "Version-controlled SQL schema and data migrations with Flyway",
+  "Unit test result reporting set up in CI pipelines",
+];
 
+export default function Home() {
   return (
     <main className="site-shell">
       <div className="aurora aurora-one" />
@@ -48,10 +51,10 @@ export default async function Home() {
   <Typewriter
     options={{
       strings: [
-        "isn't just about code,anymore."
+        "isn't just about code, anymore."
       ],
       autoStart: true,
-      loop: false,
+      loop: true,
       delay: 70,
       
     }}
@@ -83,15 +86,21 @@ export default async function Home() {
       <section id="about" className="section-wrap px-6 py-24"><div className="mx-auto max-w-6xl">
         <SectionIntro number="01" eyebrow="About" title="Shashwat Singh Chauhan" />
         <div className="mt-12 grid gap-6 lg:grid-cols-[1.15fr_.85fr]">
-          <div className="glass-card p-7 sm:p-9"><p className="max-w-2xl text-xl leading-9 text-slate-200">I care about the details that make software feel effortless: resilient architecture beneath the surface, and an intuitive experience above it.</p><div className="mt-10 flex flex-wrap gap-2">{resume.skills.domain.map((item) => <span key={item} className="skill-pill">{item}</span>)}</div></div>
-          <div className="glass-card grid place-content-center p-8"><p className="text-6xl font-semibold tracking-[-.08em] text-gradient">01</p><p className="mt-3 max-w-[13rem] text-sm leading-6 text-slate-400">A focused practice in quality, scale, and sustained product thinking.</p></div>
+          <div className="glass-card p-7 sm:p-9">
+            <p className="max-w-2xl text-xl leading-9 text-slate-200">I&apos;m a backend Java developer with 1.8 years of experience building and modernizing enterprise systems. Over the last year I&apos;ve specialized in migrations: moving platforms forward without breaking what already works.</p>
+            <p className="mt-5 max-w-2xl text-base leading-8 text-slate-300">Beyond migrations, I lead root cause analysis on production issues across systems with a C# frontend and Java server, monitor Datadog logs, and remediate ArmorCode security findings. I&apos;m comfortable working in both GitLab and GitHub.</p>
+            <p className="label mt-10">Migrations I&apos;ve led</p>
+            <ul className="mt-4 space-y-3 text-sm leading-6 text-slate-300">{migrations.map((item) => <li key={item} className="flex gap-3"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300" />{item}</li>)}</ul>
+            <div className="mt-10 flex flex-wrap gap-2">{resume.skills.domain.map((item) => <span key={item} className="skill-pill">{item}</span>)}</div>
+          </div>
+          <div className="glass-card grid place-content-center p-8"><p className="text-6xl font-semibold tracking-[-.08em] text-gradient">1.8 yrs</p><p className="mt-3 max-w-[13rem] text-sm leading-6 text-slate-400">Backend Java experience, with the last year focused on platform migrations.</p></div>
         </div>
       </div></section>
 
       <section id="skills" className="section-wrap px-6 py-24"><div className="mx-auto max-w-6xl">
         <SectionIntro number="02" eyebrow="Capabilities" title="The tools behind the thinking." />
         <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {(Object.entries(resume.skills) as [keyof ResumeResponse["skills"], string[]][]).map(([category, items], index) => <article key={category} className="glass-card group p-6"><div className="mb-7 flex items-center justify-between"><h3 className="text-lg font-medium text-white">{categoryLabels[category]}</h3><span className="text-xs text-slate-500">0{index + 1}</span></div><div className="flex flex-wrap gap-2">{items.map((skill) => <span key={skill} className="skill-pill">{skill}</span>)}</div></article>)}
+          {(Object.entries(resume.skills) as [keyof Resume["skills"], string[]][]).map(([category, items], index) => <article key={category} className="glass-card group p-6"><div className="mb-7 flex items-center justify-between"><h3 className="text-lg font-medium text-white">{categoryLabels[category]}</h3><span className="text-xs text-slate-500">0{index + 1}</span></div><div className="flex flex-wrap gap-2">{items.map((skill) => <span key={skill} className="skill-pill">{skill}</span>)}</div></article>)}
         </div>
       </div></section>
 
@@ -114,11 +123,6 @@ export default async function Home() {
       <section id="projects" className="section-wrap px-6 py-24"><div className="mx-auto max-w-6xl">
         <SectionIntro number="04" eyebrow="Selected work" title="Ideas brought into the real world." />
         <div className="mt-12 grid gap-5 lg:grid-cols-2">{resume.projects.map((project, index) => <article key={project.title} className="glass-card project-card p-7 sm:p-8"><div className="mb-12 flex items-start justify-between"><span className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/5 text-sm text-cyan-100">0{index + 1}</span><span className="text-right text-xs uppercase tracking-wider text-slate-500">{project.client}<br />{project.period}</span></div><h3 className="text-2xl font-medium text-white">{project.title}</h3><ul className="mt-5 space-y-3 text-sm leading-6 text-slate-300">{project.details.map((detail) => <li key={detail} className="flex gap-3"><span className="text-violet-300">✦</span>{detail}</li>)}</ul></article>)}</div>
-      </div></section>
-
-      <section id="blogs" className="section-wrap px-6 py-24"><div className="mx-auto max-w-6xl">
-        <SectionIntro number="05" eyebrow="From the notebook" title="Recent notes & insights." />
-        <div className="mt-12 grid gap-5 lg:grid-cols-3">{blogs.length ? blogs.slice(0, 3).map((blog) => <Link key={blog.slug} href={`/blogs/${blog.slug}`} className="glass-card blog-card flex min-h-64 flex-col p-6"><p className="text-xs uppercase tracking-[.18em] text-cyan-200/70">{new Date(blog.createdAt).toLocaleDateString()}</p><h3 className="mt-5 text-xl font-medium leading-7 text-white">{blog.title}</h3><p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-400">{blog.content}</p><span className="mt-auto pt-6 text-sm font-medium text-cyan-100">Read article <span>→</span></span></Link>) : <div className="glass-card p-8 text-slate-400">New writing is on its way.</div>}</div>
       </div></section>
 
       <section id="contact" className="px-6 pb-16 pt-24"><div className="contact-panel mx-auto max-w-6xl overflow-hidden rounded-[2rem] p-8 sm:p-14"><p className="eyebrow">Let&apos;s create something meaningful</p><div className="mt-6 flex flex-col justify-between gap-8 md:flex-row md:items-end"><h2 className="max-w-2xl text-4xl font-semibold leading-tight tracking-[-.045em] text-white sm:text-6xl">Have a project in mind?</h2><div className="shrink-0"><a href={`mailto:${resume.contact.email}`} className="button-primary">Get in touch <span aria-hidden="true">→</span></a><p className="mt-4 text-center text-sm text-slate-400">{resume.contact.mobile}</p></div></div></div></section>

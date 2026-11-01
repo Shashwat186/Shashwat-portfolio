@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Portfolio",
-  description: "My personal portfolio",
+  title: "Shashwat Singh Chauhan · Software Developer",
+  description: "Portfolio and resume of Shashwat Singh Chauhan, a full-stack engineer specializing in enterprise backend systems, cloud integrations, and developer tooling.",
 };
 
 export default function RootLayout({
@@ -13,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-gray-50 text-gray-900">{children}</body>
+      <body>{children}</body>
     </html>
   );
 }
