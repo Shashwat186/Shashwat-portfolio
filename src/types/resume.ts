@@ -6,6 +6,7 @@ export interface Resume {
   experience: ExperienceEntry[];
   projects: ProjectEntry[];
   education: Education;
+  research: ResearchEntry;
 }
 
 export interface Contact {
@@ -43,4 +44,12 @@ export interface Education {
   institution: string;
   degree: string;
   period: string;
+}
+
+export interface ResearchEntry {
+  title: string;
+  publication: string;
+  period: string;
+  url: string;
+  details: string[];
 }

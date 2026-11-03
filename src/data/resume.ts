@@ -75,4 +75,14 @@ export const resume: Resume = {
     degree: "B.Tech in Computer Science",
     period: "2020 – 2024",
   },
+  research: {
+    title: "Development and evaluation of a user friendly android application for advocacy of \"Organ Donation\" among residents of Western Rajasthan, 2022",
+    publication: "Indian Journal of Community Health · Vol. 35, No. 3",
+    period: "2023",
+    url: "https://www.iapsmupuk.org/journal/index.php/IJCH/article/view/2536",
+    details: [
+      "Built an Android app as part of a three-member team for Government Medical College, Pali, to support organ donation advocacy.",
+      "Used the app to register around 300 volunteers for organ donation.",
+    ],
+  },
 };

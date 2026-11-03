@@ -8,7 +8,8 @@ import SocialLinks from "./SocialLinks";
 import ExperienceTabs from "./ExperienceTabs";
 import SiteHeader from "./SiteHeader";
 
-const navItems = ["About", "Skills", "Work", "Projects", "Contact"];
+const navItems = ["About", "Skills", "Work", "Education", "Projects", "Contact"];
+const resumeDownload = { href: "/resume.pdf", download: "Shashwat_Singh_Chauhan_Resume.pdf" };
 
 const migrations = [
   "Java 8 → Java 21 upgrades across multiple projects",
@@ -33,6 +34,7 @@ export default function Home() {
             <span className="hidden sm:block">{resume.name}</span>
           </a>
           <div className="flex items-center gap-2">
+            <a {...resumeDownload} aria-label="Download résumé" className="button-primary button-nav"><span className="sm:hidden">Résumé</span><span className="hidden sm:inline">Download résumé</span></a>
             <SocialLinks contact={resume.contact} />
             <MobileMenu items={navItems} email={resume.contact.email} />
           </div>
@@ -67,6 +69,7 @@ export default function Home() {
               <div className="mt-9 flex flex-wrap items-center gap-3">
                 <a href={`mailto:${resume.contact.email}`} className="button-primary">Start a conversation <span aria-hidden="true">→</span></a>
                 <a href="#work" className="button-secondary">Explore my work</a>
+                <a {...resumeDownload} className="button-secondary">Download résumé <span aria-hidden="true">↓</span></a>
               </div>
             </div>
             <aside className="hero-portrait">
@@ -112,8 +115,27 @@ export default function Home() {
         <ExperienceTabs experience={resume.experience} />
       </div></section>
 
+      <section id="education" className="section-wrap px-6 py-24 short:pt-22"><div className="mx-auto max-w-6xl">
+        <SectionIntro number="04" eyebrow="Education" title="Where the foundation was laid." />
+        <article className="glass-card mt-12 p-6 sm:p-8 short:mt-6 short:p-6">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+            <div><h3 className="text-xl font-medium text-white">{resume.education.degree}</h3><p className="mt-1 text-slate-400">{resume.education.institution}</p></div>
+            <p className="text-sm text-cyan-100/80">{resume.education.period}</p>
+          </div>
+        </article>
+        <h3 className="eyebrow mb-4 mt-10 short:mt-6">Research</h3>
+        <article className="glass-card p-6 sm:p-8 short:p-6">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+            <div className="max-w-3xl"><h4 className="text-xl font-medium text-white">{resume.research.title}</h4><p className="mt-1 text-slate-400">{resume.research.publication}</p></div>
+            <p className="text-sm text-cyan-100/80">{resume.research.period}</p>
+          </div>
+          <ul className="mt-5 space-y-2.5 text-sm leading-[1.6] text-slate-300">{resume.research.details.map((detail) => <li key={detail} className="flex gap-3"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300" />{detail}</li>)}</ul>
+          <a href={resume.research.url} target="_blank" rel="noreferrer" className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-cyan-100 hover:text-white">Read the paper in IJCH <span aria-hidden="true">↗</span></a>
+        </article>
+      </div></section>
+
       <section id="projects" className="section-wrap px-6 py-24 short:pt-22"><div className="mx-auto max-w-6xl">
-        <SectionIntro number="04" eyebrow="Selected work" title="Ideas brought into the real world." />
+        <SectionIntro number="05" eyebrow="Selected work" title="Ideas brought into the real world." />
         <div className="mt-12 grid gap-5 lg:grid-cols-2 short:mt-6">{resume.projects.map((project, index) => <article key={project.title} className="glass-card project-card p-7 sm:p-8"><div className="mb-12 flex items-start short:mb-6 justify-between"><span className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/5 text-sm text-cyan-100">0{index + 1}</span><span className="text-right text-xs uppercase tracking-wider text-slate-500">{project.client}<br />{project.period}</span></div><h3 className="text-2xl font-medium text-white">{project.title}</h3><ul className="mt-5 space-y-3 text-sm leading-6 text-slate-300">{project.details.map((detail) => <li key={detail} className="flex gap-3"><span className="text-violet-300">✦</span>{detail}</li>)}</ul></article>)}</div>
       </div></section>
 
