@@ -87,6 +87,12 @@ export default function Home() {
         </div>
       </section>
 
+      <section id="impact" aria-label="Impact in numbers" className="section-wrap px-6 py-14"><div className="mx-auto max-w-6xl">
+        <p className="eyebrow"><span className="status-dot" /> Currently working on</p>
+        <h2 className="mt-3 text-2xl font-semibold tracking-[-.03em] text-white sm:text-3xl">{resume.currentApplication.name} <span className="font-normal text-slate-400">· {resume.currentApplication.company}</span></h2>
+        <dl className="mt-9 grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-5">{resume.stats.map((stat) => <div key={stat.label} className="flex flex-col-reverse justify-end last:col-span-2 lg:last:col-span-1"><dt className="mt-3 max-w-[13rem] text-sm leading-5 text-slate-400">{stat.label}</dt><dd className="m-0 text-5xl font-semibold tracking-[-.05em] text-gradient">{stat.value}</dd></div>)}</dl>
+      </div></section>
+
       <section id="about" className="section-wrap px-6 py-24 short:pt-22"><div className="mx-auto max-w-6xl">
         <SectionIntro number="01" eyebrow="About" title="Shashwat Singh Chauhan" />
         <div className="mt-12 grid gap-6 lg:grid-cols-2 short:mt-6">

@@ -2,11 +2,23 @@ export interface Resume {
   name: string;
   contact: Contact;
   summary: string;
+  currentApplication: CurrentApplication;
+  stats: Stat[];
   skills: Skills;
   experience: ExperienceEntry[];
   projects: ProjectEntry[];
   education: Education;
   research: ResearchEntry;
+}
+
+export interface CurrentApplication {
+  name: string;
+  company: string;
+}
+
+export interface Stat {
+  value: string;
+  label: string;
 }
 
 export interface Contact {
