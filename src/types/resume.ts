@@ -1,6 +1,7 @@
 export interface Resume {
   name: string;
   contact: Contact;
+  github: GitHubProfile;
   summary: string;
   currentApplication: CurrentApplication;
   stats: Stat[];
@@ -9,6 +10,11 @@ export interface Resume {
   projects: ProjectEntry[];
   education: Education;
   research: ResearchEntry;
+}
+
+export interface GitHubProfile {
+  username: string;
+  fallbackContributions: number;
 }
 
 export interface CurrentApplication {

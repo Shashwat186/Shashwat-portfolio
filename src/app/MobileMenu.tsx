@@ -26,18 +26,18 @@ export default function MobileMenu({ items, email }: { items: string[]; email: s
   // The nav's backdrop-filter traps fixed children inside it, so the overlay is portalled to <body>.
   const overlay = (
     <div id="mobile-menu" className={`mobile-menu xl:hidden ${open ? "mobile-menu--open" : ""}`} aria-hidden={!open}>
-      <nav className="flex h-full flex-col justify-center px-8" aria-label="Mobile">
-        <p className="eyebrow mb-8">Navigate</p>
-        <ul className="space-y-2">
+      <nav className="flex h-full flex-col justify-center px-8 tiny:justify-start tiny:pt-24" aria-label="Mobile">
+        <p className="eyebrow mb-8 tiny:mb-3">Navigate</p>
+        <ul className="space-y-2 tiny:space-y-0">
           {items.map((item, index) => (
             <li key={item} className="mobile-menu-item" style={{ transitionDelay: open ? `${80 + index * 45}ms` : "0ms" }}>
-              <a href={`#${item.toLowerCase()}`} onClick={() => setOpen(false)} tabIndex={open ? 0 : -1} className="flex items-baseline gap-4 py-2 text-4xl font-semibold tracking-[-.04em] text-white transition hover:text-cyan-200">
+              <a href={`#${item.toLowerCase()}`} onClick={() => setOpen(false)} tabIndex={open ? 0 : -1} className="flex items-baseline gap-4 py-2 text-4xl font-semibold tracking-[-.04em] text-white transition hover:text-cyan-200 tiny:py-1 tiny:text-2xl">
                 <span className="text-xs font-medium tracking-normal text-slate-500">0{index + 1}</span>{item}
               </a>
             </li>
           ))}
         </ul>
-        <div className="mobile-menu-item mt-12 border-t border-white/10 pt-6" style={{ transitionDelay: open ? `${80 + items.length * 45}ms` : "0ms" }}>
+        <div className="mobile-menu-item mt-12 border-t border-white/10 pt-6 tiny:mt-4 tiny:pt-4" style={{ transitionDelay: open ? `${80 + items.length * 45}ms` : "0ms" }}>
           <a href="#contact" onClick={() => setOpen(false)} tabIndex={open ? 0 : -1} className="button-primary">Let&apos;s talk <span aria-hidden="true">→</span></a>
           <CopyEmail email={email} tabIndex={open ? 0 : -1} className="mt-4 flex items-center gap-2 text-sm text-slate-400 transition hover:text-white">{email}<CopyIcon /></CopyEmail>
         </div>

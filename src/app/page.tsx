@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { resume } from "@/data/resume";
+import { getContributionTotal } from "@/lib/github";
+import ContributionTree from "./ContributionTree";
 import Typewriter from "./Typewriter";
 import SkillsGrid from "./SkillsGrid";
 import MobileMenu from "./MobileMenu";
@@ -11,7 +13,10 @@ import ScrollReveal from "./ScrollReveal";
 import CommandPalette from "./CommandPalette";
 import CopyEmail, { CopyIcon, CopyToast, MailLink } from "./CopyEmail";
 
-const navItems = ["About", "Skills", "Work", "Education", "Projects", "Contact"];
+// Rebuild the prerendered page once a day so the contribution tree stays current.
+export const revalidate = 86400;
+
+const navItems = ["About", "Skills", "Work", "Education", "Projects", "Growth", "Contact"];
 const resumeDownload = { href: "/resume.pdf", download: "Shashwat_Singh_Chauhan_Resume.pdf" };
 
 const migrations = [
@@ -23,7 +28,9 @@ const migrations = [
   "Unit test result reporting set up in CI pipelines",
 ];
 
-export default function Home() {
+export default async function Home() {
+  const contributions = await getContributionTotal();
+
   return (
     <main className="site-shell">
       <div className="aurora aurora-one" />
@@ -149,6 +156,18 @@ export default function Home() {
       <section id="projects" className="section-wrap px-6 py-24 short:pt-22"><div data-reveal className="mx-auto max-w-6xl">
         <SectionIntro number="05" eyebrow="Selected work" title="Ideas brought into the real world." />
         <div className="mt-12 grid gap-5 lg:grid-cols-2 short:mt-6">{resume.projects.map((project, index) => <article key={project.title} className="glass-card project-card p-7 sm:p-8"><div className="mb-12 flex items-start short:mb-6 justify-between"><span className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/5 text-sm text-cyan-100">0{index + 1}</span><span className="text-right text-xs uppercase tracking-wider text-slate-500">{project.client}<br />{project.period}</span></div><h3 className="text-2xl font-medium text-white">{project.title}</h3><ul className="mt-5 space-y-3 text-sm leading-6 text-slate-300">{project.details.map((detail) => <li key={detail} className="flex gap-3"><span className="text-violet-300">✦</span>{detail}</li>)}</ul></article>)}</div>
+      </div></section>
+
+      <section id="growth" className="section-wrap px-6 py-24 short:pt-22"><div data-reveal className="mx-auto max-w-6xl">
+        <SectionIntro number="06" eyebrow="Growth" title="A tree that grows as I ship." />
+        <div className="glass-card mt-12 grid items-center gap-8 p-6 sm:p-8 lg:grid-cols-[1.5fr_1fr] short:mt-6 short:p-6">
+          <ContributionTree count={contributions} />
+          <div>
+            <h3 className="text-xl font-medium text-white">Every public contribution adds a leaf.</h3>
+            <p className="mt-3 text-sm leading-6 text-slate-300">This tree is drawn from my public GitHub activity and updates daily. Client work at {resume.currentApplication.company} isn&apos;t counted, so it only shows what I build in the open.</p>
+            <a href={resume.contact.github} target="_blank" rel="noreferrer" className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-cyan-100 hover:text-white">See my GitHub <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
       </div></section>
 
       <section id="contact" className="px-6 pb-16 pt-24"><div data-reveal className="contact-panel mx-auto max-w-6xl overflow-hidden rounded-[2rem] p-8 sm:p-14"><p className="eyebrow">Let&apos;s create something meaningful</p><div className="mt-6 flex flex-col justify-between gap-8 md:flex-row md:items-end"><h2 className="max-w-2xl text-4xl font-semibold leading-tight tracking-[-.045em] text-white sm:text-6xl">Have a project in mind?</h2><div className="shrink-0"><MailLink email={resume.contact.email} className="button-primary w-full">Get in touch <span aria-hidden="true">→</span></MailLink><CopyEmail email={resume.contact.email} className="mt-4 flex w-full items-center justify-center gap-2 text-sm text-slate-300 transition hover:text-white">{resume.contact.email}<CopyIcon /></CopyEmail><p className="mt-2 text-center text-sm text-slate-400">{resume.contact.mobile}</p></div></div></div></section>

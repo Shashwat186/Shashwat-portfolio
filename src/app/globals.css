@@ -4,6 +4,8 @@
 
 /* Wide but short desktop viewports (e.g. a 1080p laptop at 125% scaling) get tighter spacing so each section fits on screen. */
 @custom-variant short (@media (min-width: 1280px) and (max-height: 820px));
+/* Very short phones, where the seven-item mobile menu needs a compact layout. */
+@custom-variant tiny (@media (max-height: 640px));
 
 :root { color-scheme: dark; }
 * { box-sizing: border-box; }

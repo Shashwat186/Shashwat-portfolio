@@ -8,6 +8,8 @@ export const resume: Resume = {
     github: "https://github.com/Shashwat186",
     mobile: "+91-9982602200",
   },
+  // The fallback is used when GITHUB_TOKEN is missing or GitHub can't be reached.
+  github: { username: "Shashwat186", fallbackContributions: 5 },
   summary: "Full-stack engineer specializing in enterprise backend systems, cloud integrations, and developer tooling.",
   currentApplication: { name: "ETF Order Management System", company: "Genpact" },
   stats: [
