@@ -8,6 +8,7 @@ import SocialLinks from "./SocialLinks";
 import ExperienceTabs from "./ExperienceTabs";
 import SiteHeader from "./SiteHeader";
 import ScrollReveal from "./ScrollReveal";
+import CommandPalette from "./CommandPalette";
 import CopyEmail, { CopyIcon, CopyToast, MailLink } from "./CopyEmail";
 
 const navItems = ["About", "Skills", "Work", "Education", "Projects", "Contact"];
@@ -36,6 +37,7 @@ export default function Home() {
             <span className="hidden sm:block">{resume.name}</span>
           </a>
           <div className="flex items-center gap-2">
+            <CommandPalette items={navItems} contact={resume.contact} resumeDownload={resumeDownload} />
             <a {...resumeDownload} aria-label="Download résumé" className="button-primary button-nav"><span className="sm:hidden">Résumé</span><span className="hidden sm:inline">Download résumé</span></a>
             <SocialLinks contact={resume.contact} />
             <MobileMenu items={navItems} email={resume.contact.email} />

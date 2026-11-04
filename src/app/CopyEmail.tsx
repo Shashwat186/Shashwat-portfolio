@@ -4,7 +4,7 @@ import { ComponentProps, useEffect, useState } from "react";
 
 const TOAST_EVENT = "copy-email-toast";
 
-async function copyEmail(email: string, success: string) {
+export async function copyEmail(email: string, success: string) {
   let detail = { message: success, duration: 2200 };
   try {
     await navigator.clipboard.writeText(email);
