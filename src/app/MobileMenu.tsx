@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
+import CopyEmail, { CopyIcon } from "./CopyEmail";
 
 export default function MobileMenu({ items, email }: { items: string[]; email: string }) {
   const [open, setOpen] = useState(false);
@@ -38,7 +39,7 @@ export default function MobileMenu({ items, email }: { items: string[]; email: s
         </ul>
         <div className="mobile-menu-item mt-12 border-t border-white/10 pt-6" style={{ transitionDelay: open ? `${80 + items.length * 45}ms` : "0ms" }}>
           <a href="#contact" onClick={() => setOpen(false)} tabIndex={open ? 0 : -1} className="button-primary">Let&apos;s talk <span aria-hidden="true">→</span></a>
-          <p className="mt-4 text-sm text-slate-400">{email}</p>
+          <CopyEmail email={email} tabIndex={open ? 0 : -1} className="mt-4 flex items-center gap-2 text-sm text-slate-400 transition hover:text-white">{email}<CopyIcon /></CopyEmail>
         </div>
       </nav>
     </div>
